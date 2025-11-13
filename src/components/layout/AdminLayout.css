@@ -1,0 +1,131 @@
+/* File: src/components/layout/AdminLayout.css */
+
+/* Gốc của toàn bộ layout */
+.admin-layout {
+  display: flex; /* Sử dụng Flexbox để xếp 2 cột */
+  min-height: 100vh; /* Đảm bảo layout cao 100% màn hình */
+}
+
+/* --- CỘT MENU BÊN TRÁI (SIDEBAR) --- */
+.sidebar {
+  width: 250px; /* Cố định chiều rộng của menu */
+  background-color: #2c3e50; /* Màu nền tối */
+  color: white;
+  padding: 20px;
+}
+
+/* --- SỬA LẠI HEADER CỦA SIDEBAR --- */
+.sidebar-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  
+  /* Dùng Flexbox để căn chỉnh */
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang (nếu muốn) */
+}
+
+/* Định dạng cho logo */
+.sidebar-logo {
+  width: 40px; /* Kích thước logo */
+  height: 40px;
+  margin-right: 10px; /* Khoảng cách giữa logo và chữ */
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 10px;
+}
+
+/* Style cho các link menu (đã cập nhật Flexbox) */
+.sidebar-nav a {
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+  
+  /* --- THÊM 3 DÒNG NÀY --- */
+  display: flex; /* 1. Dùng Flexbox */
+  align-items: center; /* 2. Căn icon và chữ giữa theo chiều dọc */
+}
+
+/* Thêm CSS cho icon (thẻ <i>) bên trong link */
+.sidebar-nav a i {
+  margin-right: 10px; /* Tạo khoảng cách giữa icon và chữ */
+  min-width: 20px; /* Đảm bảo icon có không gian */
+  text-align: center; /* Căn giữa icon */
+}
+
+.sidebar-nav a:hover {
+  background-color: #34495e;
+}
+
+/* --- KHU VỰC NỘI DUNG CHÍNH (BÊN PHẢI) --- */
+.main-content {
+  flex-grow: 1; /* Tự động co giãn chiếm hết phần còn lại */
+  background-color: #f4f7f6;
+  display: flex;
+  flex-direction: column; /* Xếp Header và Content theo chiều dọc */
+}
+
+/* Thanh Header (trên cùng bên phải) */
+.header {
+  background-color: #ffffff;
+  padding: 20px;
+  border-bottom: 2px solid #CCCCCC;
+  display: flex;
+  justify-content: space-between; /* <-- THAY ĐỔI: Đẩy 2 item ra 2 phía */
+  align-items: center; /* <-- THÊM MỚI: Căn giữa theo chiều dọc */
+}
+
+/* (Đổi tên class cho nút Đăng xuất) */
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* (Thêm class cho lời chào) */
+.welcome-message {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.header button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Nội dung của trang (nơi <Outlet> sẽ render) */
+.page-content {
+  padding: 20px;
+  flex-grow: 1; /* Đảm bảo nó lấp đầy không gian còn lại */
+}
+
+/* Style cho link khi đang được CHỌN (ACTIVE) */
+.sidebar-nav a.active {
+  background-color: #009879; /* Màu xanh lá (giống màu bảng) */
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Style cho link khi đang ở trang con (ví dụ: /admin/hocvien/HV001)
+   (React Router cũng thêm class 'active' cho link cha là /admin/hocvien)
+*/
+.sidebar-nav a.active:hover {
+  background-color: #007a63; /* Màu xanh lá đậm hơn khi hover */
+}

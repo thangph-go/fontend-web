@@ -1,0 +1,41 @@
+/* File: src/styles/notification.css */
+
+.notification {
+  position: fixed; /* Bay trên màn hình */
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  /* Hiệu ứng trượt vào */
+  animation: slideIn 0.5s forwards;
+  z-index: 1000; /* Luôn nổi trên cùng */
+}
+
+/* 2 Kiểu thông báo: Thành công (Success) và Lỗi (Error) */
+
+.notification-success {
+  background-color: #2ecc71; /* Màu xanh lá */
+  border-left: 5px solid #27ae60;
+}
+
+.notification-error {
+  background-color: #e74c3c; /* Màu đỏ */
+  border-left: 5px solid #c0392b;
+}
+
+/* Animation trượt vào từ bên phải */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
