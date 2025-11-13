@@ -1,18 +1,18 @@
 /* File: src/styles/tables.css */
 
 .styled-table {
-  width: 100%; /* Bảng rộng 100% */
-  border-collapse: collapse; /* Gộp các đường viền lại */
+  width: 100%;
+  border-collapse: collapse;
   margin: 25px 0;
   font-size: 0.9em;
   border-radius: 5px 5px 0 0;
-  overflow: hidden; /* Giúp bo góc (border-radius) hoạt động */
+  overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Định dạng Tiêu đề bảng (thead) */
 .styled-table thead tr {
-  background-color: #009879; /* Màu xanh lá cây */
+  background-color: #009879;
   color: #ffffff;
   text-align: left;
 }

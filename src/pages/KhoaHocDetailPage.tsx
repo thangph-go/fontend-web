@@ -58,9 +58,15 @@ const KhoaHocDetailPage = () => {
       <p><strong>Nội dung:</strong> {khoaHoc.noi_dung}</p>
       <p>
         <strong>Thời gian:</strong> 
-        {new Date(khoaHoc.thoi_gian_bat_dau).toLocaleDateString('vi-VN')} - 
+        {khoaHoc.thoi_gian_bat_dau
+          ? new Date(khoaHoc.thoi_gian_bat_dau).toLocaleDateString('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric' 
+            })
+          : '(Chưa có)'} - 
         {khoaHoc.thoi_gian_ket_thuc 
-          ? new Date(khoaHoc.thoi_gian_ket_thuc).toLocaleDateString('vi-VN') 
+          ? new Date(khoaHoc.thoi_gian_ket_thuc).toLocaleDateString('vi-VN', {
+              day: '2-digit', month: '2-digit', year: 'numeric' 
+            }) 
           : '(Đang diễn ra)'}
       </p>
       

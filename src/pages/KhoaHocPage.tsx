@@ -14,12 +14,10 @@ import {
   KhoaHocFormData,
 } from '../services/khoahoc.service';
 
-// Import component giao diện
+// SỬA LỖI 1: Import component giao diện
 import Notification from '../components/common/Notification';
 
-// --- ĐỊNH NGHĨA CÁC KIỂU DỮ LIỆU ---
-
-// Kiểu cho State Thông báo
+// SỬA LỖI 2: Thêm kiểu State Thông báo
 type NotificationState = {
   message: string;
   type: 'success' | 'error';
@@ -43,7 +41,7 @@ const KhoaHocPage = () => {
   const [formData, setFormData] = useState<KhoaHocFormData>(initialFormState);
   const [editingMaKH, setEditingMaKH] = useState<string | null>(null);
 
-  // (Thay thế 'error' state bằng 'notification' state)
+  // SỬA LỖI 3: Thay thế 'error' state bằng 'notification' state
   const [notification, setNotification] = useState<NotificationState>(null);
   
   const navigate = useNavigate();
@@ -54,11 +52,11 @@ const KhoaHocPage = () => {
       const data = await getAllKhoaHoc();
       setKhoaHocList(data);
     } catch (err: any) {
+      // SỬA LỖI 4: Dùng setNotification
       setNotification({ message: err.message, type: 'error' });
     }
   };
 
-  // Chạy khi component tải lần đầu
   useEffect(() => {
     loadKhoaHoc();
   }, []);
@@ -78,26 +76,26 @@ const KhoaHocPage = () => {
     setShowForm(false);
     setFormData(initialFormState);
     setEditingMaKH(null);
-    setNotification(null); // Tắt thông báo (nếu có) khi Hủy
+    setNotification(null);
   };
 
   // --- Hàm Xử Lý API ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setNotification(null); // Xóa thông báo cũ
+    setNotification(null); 
 
     try {
       if (editingMaKH) {
-        // Cập nhật (Sửa)
         await updateKhoaHoc(editingMaKH, formData);
+        // SỬA LỖI 5: Thay alert()
         setNotification({ message: 'Cập nhật khóa học thành công!', type: 'success' });
       } else {
-        // Tạo mới (Thêm)
         await createKhoaHoc(formData);
+        // SỬA LỖI 5: Thay alert()
         setNotification({ message: 'Thêm khóa học thành công!', type: 'success' });
       }
       
-      // Dọn dẹp form và tải lại list (Không gọi handleCancel)
+      // SỬA LỖI 6: Sửa lỗi logic pop-up
       setShowForm(false);
       setFormData(initialFormState);
       setEditingMaKH(null);
@@ -108,7 +106,7 @@ const KhoaHocPage = () => {
   };
 
   const handleEditClick = (kh: KhoaHoc) => {
-    setNotification(null); // Xóa thông báo lỗi (nếu có)
+    setNotification(null); 
     setEditingMaKH(kh.ma_khoa_hoc);
     setFormData({
       ma_khoa_hoc: kh.ma_khoa_hoc,
@@ -136,7 +134,6 @@ const KhoaHocPage = () => {
   // --- Giao Diện (JSX) ---
   return (
     <div>
-      {/* Thêm Component Thông báo */}
       {notification && (
         <Notification
           message={notification.message}
@@ -147,7 +144,6 @@ const KhoaHocPage = () => {
       
       <h2>Quản lý khóa học</h2>
       
-      {/* Xóa dòng {error} cũ */}
 
       {!showForm && (
         <button 
@@ -158,12 +154,11 @@ const KhoaHocPage = () => {
           }}>Thêm khóa học mới</button>
       )}
 
-      {/* --- FORM THÊM MỚI / CẬP NHẬT --- */}
+      {/* Form Thêm Mới / Cập Nhật */}
       {showForm && (
         <form onSubmit={handleSubmit} className="form-container">
           <h3>{editingMaKH ? 'Cập nhật khóa học' : 'Thêm khóa học mới'}</h3>
           
-          {/* (Các Nhóm Form Group giữ nguyên) */}
           <div className="form-group">
             <label className="form-label">Mã khóa học:</label>
             <input
@@ -229,7 +224,7 @@ const KhoaHocPage = () => {
         </form>
       )}
 
-      {/* --- DANH SÁCH KHÓA HỌC (Bảng) --- */}
+      {/* Danh sách Khóa học (Bảng) */}
       <hr style={{border: 'none', borderTop: '1px solid #eee', margin: '20px 0'}} />
       <h3>Danh sách khóa học</h3>
 
@@ -255,15 +250,20 @@ const KhoaHocPage = () => {
               <tr key={kh.ma_khoa_hoc}>
                 <td>{kh.ma_khoa_hoc}</td>
                 <td>{kh.ten_khoa}</td>
-                {/* Thêm kiểm tra (kh.thoi_gian_bat_dau ?) để phòng trường hợp null */}
+                {/* Cột Bắt Đầu */}
                 <td>
                   {kh.thoi_gian_bat_dau 
-                    ? new Date(kh.thoi_gian_bat_dau).toLocaleDateString('vi-VN') 
+                    ? new Date(kh.thoi_gian_bat_dau).toLocaleDateString('vi-VN', {
+                        day: '2-digit', month: '2-digit', year: 'numeric' 
+                      }) 
                     : '(Chưa có)'}
                 </td>
+                {/* Cột Kết Thúc */}
                 <td>
                   {kh.thoi_gian_ket_thuc 
-                    ? new Date(kh.thoi_gian_ket_thuc).toLocaleDateString('vi-VN') 
+                    ? new Date(kh.thoi_gian_ket_thuc).toLocaleDateString('vi-VN', {
+                        day: '2-digit', month: '2-digit', year: 'numeric' 
+                      }) 
                     : '(Chưa có)'}
                 </td>
                 

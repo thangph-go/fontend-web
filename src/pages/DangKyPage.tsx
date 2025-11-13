@@ -26,14 +26,14 @@ const DangKyPage = () => {
   const [selectedHocVien, setSelectedHocVien] = useState<string>('');
   const [selectedKhoaHoc, setSelectedKhoaHoc] = useState<string>('');
 
-  // Thay thế state 'error' và 'success' bằng 'notification'
   const [notification, setNotification] = useState<NotificationState>(null);
 
-  // --- TẢI DỮ LIỆU ---
+  // --- TẢI DỮ LIỆU (cho 2 dropdowns) ---
   useEffect(() => {
     const loadData = async () => {
       try {
         setNotification(null);
+        // Tải song song 2 danh sách
         const [hvData, khData] = await Promise.all([
           getAllHocVien(),
           getAllKhoaHoc()
@@ -46,12 +46,12 @@ const DangKyPage = () => {
       }
     };
     loadData();
-  }, []);
+  }, []); // [] = Chạy 1 lần
 
-  // --- XỬ LÝ SUBMIT ---
+  // --- XỬ LÝ SUBMIT (GHI DANH) ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setNotification(null); // Xóa thông báo cũ
+    setNotification(null); 
 
     if (!selectedHocVien || !selectedKhoaHoc) {
       setNotification({ message: 'Vui lòng chọn cả học viên và khóa học', type: 'error' });
@@ -65,11 +65,12 @@ const DangKyPage = () => {
       };
       await registerStudentToCourse(data); 
 
-      // 3. Thông báo thành công và reset form
+      // Thông báo thành công và reset form
       setNotification({ message: 'Ghi danh học viên thành công!', type: 'success' });
       setSelectedHocVien('');
       setSelectedKhoaHoc('');
     } catch (err: any) {
+      // Hiển thị lỗi (vd: "Học viên đã đăng ký khóa này rồi")
       setNotification({ message: err.message, type: 'error' });
     }
   };
@@ -77,7 +78,6 @@ const DangKyPage = () => {
   // --- GIAO DIỆN (JSX) ---
   return (
     <div>
-      {/* Component Thông báo (sẽ tự động hiện/ẩn) */}
       {notification && (
         <Notification
           message={notification.message}
@@ -86,17 +86,16 @@ const DangKyPage = () => {
         />
       )}
       
-      <h2>Đăng ký Khóa Học cho Học Viên</h2>
+      <h2>Ghi Danh Học Viên Vào Khóa Học</h2>
       
       <form onSubmit={handleSubmit} className="form-container">
         
-        {/* Nhóm 1: Chọn Học Viên */}
         <div className="form-group">
           <label className="form-label">Chọn học viên:</label>
           <select 
             value={selectedHocVien} 
             onChange={(e) => setSelectedHocVien(e.target.value)}
-            className="form-select" // <-- ÁP DỤNG CLASS
+            className="form-select"
             required
           >
             <option value="">-- Chọn học viên --</option>
@@ -108,13 +107,12 @@ const DangKyPage = () => {
           </select>
         </div>
 
-        {/* Nhóm 2: Chọn Khóa Học */}
         <div className="form-group">
           <label className="form-label">Chọn khóa học:</label>
           <select 
             value={selectedKhoaHoc} 
             onChange={(e) => setSelectedKhoaHoc(e.target.value)}
-            className="form-select" // <-- ÁP DỤNG CLASS
+            className="form-select"
             required
           >
             <option value="">-- Chọn khóa học --</option>
@@ -126,8 +124,7 @@ const DangKyPage = () => {
           </select>
         </div>
 
-        {/* Nút Bấm */}
-        <button type="submit" className="form-button">Đăng ký</button>
+        <button type="submit" className="form-button">Ghi danh</button>
       </form>
     </div>
   );

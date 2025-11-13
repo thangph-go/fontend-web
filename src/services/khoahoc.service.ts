@@ -8,7 +8,7 @@ export interface KhoaHoc {
   ten_khoa: string;
   noi_dung: string;
   thoi_gian_bat_dau: string;
-  thoi_gian_ket_thuc: string; // Có thể là null
+  thoi_gian_ket_thuc: string | null; // Có thể là null
   deleted_at: string | null;
 }
 
@@ -78,9 +78,6 @@ export const deleteKhoaHoc = async (ma_kh: string) => {
   }
 };
 
-// ... (Giữ nguyên các Interface và các hàm getAll, create, update, delete) ...
-
-// --- THÊM HÀM MỚI NÀY ---
 // Hàm gọi API GET (Lấy MỘT khóa học)
 // (API: GET /api/khoahoc/:ma_kh)
 export const getKhoaHocById = async (ma_kh: string) => {
@@ -95,4 +92,3 @@ export const getKhoaHocById = async (ma_kh: string) => {
     }
   }
 };
-// -------------------------

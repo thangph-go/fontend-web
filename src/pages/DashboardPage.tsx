@@ -53,9 +53,6 @@ const DashboardPage = () => {
       ) : (
         <p>Đang tải số liệu thống kê...</p>
       )}
-
-      {/* (Phần Lối tắt Nhanh đã được xóa bỏ)
-      */}
       
     </div>
   );

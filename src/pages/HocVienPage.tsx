@@ -1,10 +1,16 @@
-// File: src/pages/HocVienPage.tsx (ĐÃ HOÀN CHỈNH)
+/*
+ * File: HocVienPage.tsx
+ * Nhiệm vụ:
+ * 1. Hiển thị danh sách học viên (có phân trang, tìm kiếm).
+ * 2. Xử lý logic Thêm, Sửa, Xóa (mềm) học viên.
+ * 3. Hiển thị Form, Tải danh sách tỉnh thành cho dropdown.
+ */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/forms.css';
 import '../styles/tables.css';
 
-// Import các hàm service
+// Import Services
 import { 
   getAllHocVien, 
   createHocVien, 
@@ -15,7 +21,7 @@ import {
 } from '../services/hocvien.service';
 import { getAllTinhThanh, TinhThanh } from '../services/tinhthanh.service';
 
-// Import component giao diện
+// Import Components
 import Notification from '../components/common/Notification';
 
 // --- ĐỊNH NGHĨA CÁC KIỂU DỮ LIỆU ---
@@ -44,7 +50,7 @@ const initialFormState: HocVienFormData = {
 // --- COMPONENT CHÍNH ---
 
 const HocVienPage = () => {
-  // --- CÁC STATE ---
+  // --- STATE ---
   const [hocVienList, setHocVienList] = useState<HocVien[]>([]);
   const [tinhThanhList, setTinhThanhList] = useState<TinhThanh[]>([]);
   
@@ -55,31 +61,28 @@ const HocVienPage = () => {
   const [notification, setNotification] = useState<NotificationState>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // (State [error, setError] đã bị XÓA BỎ)
+  // (ĐÃ XÓA state [error, setError] - vì đã có 'notification')
   
   const navigate = useNavigate();
 
-  // --- CÁC HÀM XỬ LÝ DỮ LIỆU ---
+  // --- HÀM TẢI DỮ LIỆU ---
 
-  // Hàm tải danh sách học viên
   const loadHocVien = async () => {
     try {
       const data = await getAllHocVien();
       setHocVienList(data);
     } catch (err: any) {
-      // SỬA LẠI: Dùng setNotification
       setNotification({ message: err.message, type: 'error' });
     }
   };
 
-  // Tải dữ liệu lần đầu khi trang mở
+  // Tải dữ liệu lần đầu (Học viên + Tỉnh thành)
   useEffect(() => {
     const loadTinhThanh = async () => {
       try {
         const data = await getAllTinhThanh();
         setTinhThanhList(data);
       } catch (err: any) {
-        // SỬA LẠI: Dùng setNotification
         setNotification({ message: err.message, type: 'error' });
       }
     };
@@ -88,7 +91,7 @@ const HocVienPage = () => {
     loadTinhThanh();
   }, []); // [] = Chạy 1 lần
 
-  // Hàm xử lý gõ/chọn trên form
+  // Xử lý gõ/chọn trên form
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -99,7 +102,7 @@ const HocVienPage = () => {
     });
   };
 
-  // --- CÁC HÀM XỬ LÝ SỰ KIỆN (CLICK) ---
+  // --- HÀM XỬ LÝ SỰ KIỆN (CLICK) ---
 
   // Khi nhấn "Lưu" (Thêm mới hoặc Cập nhật)
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,7 +112,6 @@ const HocVienPage = () => {
     try {
       if (editingMaHV) {
         // Cập nhật (Sửa)
-        // (Ép kiểu formData cho đúng)
         await updateHocVien(editingMaHV, formData as HocVienFormData);
         setNotification({ message: 'Cập nhật thành công!', type: 'success' });
       } else {
@@ -124,12 +126,10 @@ const HocVienPage = () => {
         setNotification({ message: 'Thêm học viên thành công!', type: 'success' });
       }
 
-      // --- SỬA LẠI LOGIC DỌN DẸP ---
-      // Không gọi handleCancel() nữa vì nó sẽ tắt thông báo
+      // SỬA LỖI LOGIC: Tự dọn dẹp, không gọi handleCancel()
       setShowForm(false);
       setFormData(initialFormState);
       setEditingMaHV(null);
-      // -----------------------------
       
       loadHocVien();  // Tải lại danh sách
     } catch (err: any) {
@@ -152,7 +152,7 @@ const HocVienPage = () => {
     setFormData({
       ma_hoc_vien: hv.ma_hoc_vien,
       ho_ten: hv.ho_ten,
-      ngay_sinh: (hv.ngay_sinh || '').split('T')[0], // Thêm || '' để phòng trường hợp null
+      ngay_sinh: (hv.ngay_sinh || '').split('T')[0], // SỬA LỖI LOGIC: Thêm || ''
       ma_tinh_que_quan: hv.ma_tinh_que_quan,
       ma_tinh_thuong_tru: hv.ma_tinh_thuong_tru
     });
@@ -193,7 +193,6 @@ const HocVienPage = () => {
   // --- GIAO DIỆN (JSX) ---
   return (
     <div>
-      {/* Component Thông báo (sẽ tự động hiện/ẩn) */}
       {notification && (
         <Notification
           message={notification.message}
@@ -217,9 +216,7 @@ const HocVienPage = () => {
             Thêm học viên mới
           </button>
         )}
-        {showForm && (
-          <div></div> // Giữ chỗ để đẩy form tìm kiếm sang phải
-        )}
+        {showForm && ( <div></div> )}
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
@@ -337,8 +334,14 @@ const HocVienPage = () => {
               <tr key={hv.ma_hoc_vien}>
                 <td>{hv.ma_hoc_vien}</td>
                 <td>{hv.ho_ten}</td>
-                {/* Thêm kiểm tra (hv.ngay_sinh ?) để phòng trường hợp null */}
-                <td>{hv.ngay_sinh ? new Date(hv.ngay_sinh).toLocaleDateString('vi-VN') : '(Chưa có)'}</td>
+                {/* SỬA LỖI LOGIC: Thêm kiểm tra '?' */}
+                <td>
+                  {hv.ngay_sinh 
+                    ? new Date(hv.ngay_sinh).toLocaleDateString('vi-VN', {
+                        day: '2-digit', month: '2-digit', year: 'numeric' 
+                      }) 
+                    : '(Chưa có)'}
+                </td>
                 
                 <td>
                   <button 

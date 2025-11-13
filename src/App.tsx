@@ -1,13 +1,21 @@
-// File: src/App.tsx
+/*
+ * File: App.tsx
+ * Đây là file "Bản đồ" (Router) chính của ứng dụng Frontend.
+ * Nhiệm vụ:
+ * 1. Định nghĩa tất cả các "trang" (đường dẫn) của ứng dụng.
+ * 2. Sử dụng 'ProtectedRoute' để bảo vệ các trang quản trị (yêu cầu đăng nhập).
+ * 3. Sử dụng 'AdminLayout' để áp dụng bố cục (Sidebar/Header) chung cho các trang quản trị.
+ */
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-// Import các component
+// --- 1. IMPORT CÁC COMPONENT BỐ CỤC (LAYOUT) ---
 import LoginPage from './pages/LoginPage';
-import ProtectedRoute from './components/layout/ProtectedRoute';
-import AdminLayout from './components/layout/AdminLayout'; // <-- 1. Import Layout mới
+import ProtectedRoute from './components/layout/ProtectedRoute'; // "Gác cổng" kiểm tra đăng nhập
+import AdminLayout from './components/layout/AdminLayout'; // Bố cục (Sidebar + Header)
 
-// Import các trang
+// --- 2. IMPORT CÁC TRANG (PAGES) ---
 import DashboardPage from './pages/DashboardPage';
 import HocVienPage from './pages/HocVienPage';
 import HocVienDetailPage from './pages/HocVienDetailPage';
@@ -22,34 +30,62 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* --- TRANG CÔNG KHAI --- */}
+        
+        {/* --- TRANG CÔNG KHAI (PUBLIC) --- */}
+        {/* Ai cũng có thể truy cập trang Login */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* --- TRANG ĐƯỢC BẢO VỆ --- */}
+        {/* --- TRANG ĐƯỢC BẢO VỆ (PRIVATE) --- */}
+        {/* * Tất cả các route bên trong <ProtectedRoute> sẽ bị "gác cổng".
+         * Nếu chưa đăng nhập, người dùng sẽ bị đá về '/login'.
+         */}
         <Route element={<ProtectedRoute />}>
           
-          {/* 2. Dùng AdminLayout làm route cha "bọc" tất cả các trang */}
+          {/* * Tất cả các route bên trong <AdminLayout> sẽ có chung bố cục
+           * (Sidebar, Header, Nút Đăng xuất).
+           * Component trang con sẽ được render vào <Outlet /> của AdminLayout.
+           */}
           <Route path="/admin" element={<AdminLayout />}>
             
-            {/* 3. Các trang con (dùng path tương đối, không có / ở đầu) */}
+            {/* * 3. Các Trang Con (Admin Pages)
+             * (path="dashboard" sẽ được tự động nối với path="/admin" 
+             * để tạo thành /admin/dashboard)
+             */}
+            
+            {/* Trang Tổng quan */}
             <Route path="dashboard" element={<DashboardPage />} />
+            
+            {/* Module Học Viên */}
             <Route path="hocvien" element={<HocVienPage />} />
             <Route path="hocvien/:ma_hv" element={<HocVienDetailPage />} />
+            
+            {/* Module Khóa Học */}
             <Route path="khoahoc" element={<KhoaHocPage />} />
             <Route path="khoahoc/:ma_kh" element={<KhoaHocDetailPage />} />
+            
+            {/* Module Nghiệp Vụ */}
             <Route path="dangky" element={<DangKyPage />} />
             <Route path="ketqua" element={<CapNhatKetQuaPage />} />
+            
+            {/* Module Báo Cáo & Quản Trị */}
             <Route path="thongke" element={<ThongKePage />} />
             <Route path="taikhoan" element={<QuanLyTaiKhoanPage />} />
 
-            {/* (Nếu vào /admin, tự động chuyển đến dashboard) */}
+            {/* * Route Mặc Định (Index)
+             * Nếu người dùng truy cập /admin (không có gì phía sau),
+             * tự động chuyển hướng họ đến trang "dashboard".
+             */}
             <Route index element={<Navigate to="dashboard" />} />
           </Route>
         
         </Route>
 
-        {/* Tự động chuyển hướng từ trang gốc về /login */}
+        {/* --- ROUTE GỐC (FALLBACK) --- */}
+        {/* * Nếu người dùng truy cập vào "/" (trang chủ),
+         * tự động chuyển hướng họ đến "/login".
+         */}
         <Route path="/" element={<Navigate to="/login" />} />
+        
       </Routes>
     </BrowserRouter>
   );

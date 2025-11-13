@@ -1,13 +1,7 @@
 // File: src/components/layout/AdminLayout.tsx (Bản chuẩn)
 import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import './AdminLayout.css'; // Import file CSS
-
-// 1. DÙNG CÁCH IMPORT NÀY (Cách chuẩn)
-import { 
-  FaHome, FaBook, FaChartBar, FaUsers, 
-  FaUserGraduate, FaEdit, FaTasks 
-} from 'react-icons/fa';
+import './AdminLayout.css';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -37,12 +31,11 @@ const AdminLayout = () => {
           <span>Quản lý trung tâm</span>
         </div>
         
-        {/* 2. SỬ DỤNG THẺ <i> VỚI className (THAY VÌ COMPONENT) */}
         <ul className="sidebar-nav">
           
           <li>
             <NavLink to="/admin/dashboard">
-              <i className="fas fa-home"></i> {/* <-- ĐÃ SỬA */}
+              <i className="fas fa-home"></i>
               <span>Trang chủ</span>
             </NavLink>
           </li>
@@ -51,19 +44,19 @@ const AdminLayout = () => {
             <> 
               <li>
                 <NavLink to="/admin/khoahoc">
-                  <i className="fas fa-book"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-book"></i>
                   <span>Quản lý khóa học</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/admin/thongke">
-                  <i className="fas fa-chart-bar"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-chart-bar"></i> 
                   <span>Thống kê</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/admin/taikhoan">
-                  <i className="fas fa-users"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-users"></i>
                   <span>Quản lý tài khoản</span>
                 </NavLink>
               </li>
@@ -74,19 +67,19 @@ const AdminLayout = () => {
             <>
               <li>
                 <NavLink to="/admin/hocvien">
-                  <i className="fas fa-user-graduate"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-user-graduate"></i>
                   <span>Quản lý học viên</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/admin/dangky">
-                  <i className="fas fa-edit"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-edit"></i>
                   <span>Đăng ký khoá học</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/admin/ketqua">
-                  <i className="fas fa-tasks"></i> {/* <-- ĐÃ SỬA */}
+                  <i className="fas fa-tasks"></i>
                   <span>Cập nhật Kết quả</span>
                 </NavLink>
               </li>

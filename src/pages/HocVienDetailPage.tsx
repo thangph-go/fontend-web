@@ -4,23 +4,35 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getHocVienById, HocVien } from '../services/hocvien.service';
 import { getStudentHistory, StudentHistory } from '../services/thongke.service';
 
+// 1. Import CSS cho Bảng và Nút bấm
+import '../styles/tables.css'; 
+import '../styles/forms.css';
+
+// Import component Thông báo
+import Notification from '../components/common/Notification';
+
+// Kiểu cho State Thông báo
+type NotificationState = {
+  message: string;
+  type: 'success' | 'error';
+} | null;
+
 const HocVienDetailPage = () => {
-  // 1. Lấy "ma_hv" từ URL (ví dụ: /admin/hocvien/HV001)
   const { ma_hv } = useParams<{ ma_hv: string }>();
   const navigate = useNavigate();
 
-  // 2. State để lưu dữ liệu
+  // State
   const [hocVien, setHocVien] = useState<HocVien | null>(null);
   const [history, setHistory] = useState<StudentHistory[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState<NotificationState>(null);
 
-  // 3. Tải dữ liệu khi trang mở
+  // Tải dữ liệu
   useEffect(() => {
-    if (!ma_hv) return; // Nếu không có mã, không làm gì cả
+    if (!ma_hv) return; 
 
     const fetchData = async () => {
       try {
-        // Tải song song cả 2 API
+        setNotification(null);
         const [hvData, historyData] = await Promise.all([
           getHocVienById(ma_hv),
           getStudentHistory(ma_hv)
@@ -30,58 +42,99 @@ const HocVienDetailPage = () => {
         setHistory(historyData || []);
 
       } catch (err: any) {
-        setError(err.message);
+        setNotification({ message: err.message, type: 'error' });
       }
     };
 
     fetchData();
-  }, [ma_hv]); // Chạy lại nếu ma_hv thay đổi
+  }, [ma_hv]); 
 
-  // 4. Xử lý hiển thị
-  if (error) return <p style={{ color: 'red' }}>Lỗi: {error}</p>;
-  if (!hocVien || !history) return <p>Đang tải chi tiết học viên...</p>;
+  // Xử lý hiển thị
+  if (!hocVien || !history) {
+     return (
+       <div>
+         {notification && (
+           <Notification
+             message={notification.message}
+             type={notification.type}
+             onClose={() => setNotification(null)}
+           />
+         )}
+         {!notification && <p>Đang tải chi tiết học viên...</p>}
+         <button 
+           className="form-button form-button-secondary" 
+           style={{marginTop: '20px'}}
+           onClick={() => navigate('/admin/hocvien')}>&larr; 
+           Quay lại
+         </button>
+       </div>
+     );
+  }
 
-  // 5. Giao diện (JSX)
+  // Giao diện (JSX)
   return (
     <div>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
+
       <button 
         className="form-button form-button-secondary" 
+        style={{marginBottom: '20px'}}
         onClick={() => navigate('/admin/hocvien')}>&larr; 
         Quay lại danh sách
       </button>
       
       <h2>Chi tiết Học viên: {hocVien.ho_ten}</h2>
       <p><strong>Mã HV:</strong> {hocVien.ma_hoc_vien}</p>
-      <p><strong>Ngày sinh:</strong> {new Date(hocVien.ngay_sinh).toLocaleDateString('vi-VN')}</p>
-      
-      {/* === ĐÃ SỬA THEO YÊU CẦU === */}
+      <p><strong>Ngày sinh:</strong> {hocVien.ngay_sinh ? new Date(hocVien.ngay_sinh).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '(Chưa cập nhật)'}</p>
       <p><strong>Quê quán:</strong> {hocVien.ten_tinh_que_quan || '(Chưa cập nhật)'}</p>
       <p><strong>Thường trú:</strong> {hocVien.ten_tinh_thuong_tru || '(Chưa cập nhật)'}</p>
-      {/* ============================= */}
 
-      <hr style={{background: "#666666", height: "2px"}} />
+      <hr style={{border: 'none', borderTop: '3px solid #777777', margin: '20px 0'}} />
             
+      {/* --- PHẦN ĐÃ SỬA: Thay <ul> bằng <table> --- */}
       <h3>Lịch sử học tập:</h3>
-      <ul>
-        {history.length === 0 ? (
-          <li>Chưa tham gia khóa học nào.</li>
-        ) : (
-          history.map(item => (
-            <li key={item.ma_khoa_hoc}>
-              <strong>{item.ten_khoa}</strong>
-              <br />
-              (Ngày ĐK: {new Date(item.ngay_dang_ky).toLocaleDateString('vi-VN')})
-              {/* === ĐÃ THÊM THEO YÊU CẦU === */}
-              {item.thoi_gian_ket_thuc && 
-                ` - (Ngày KT: ${new Date(item.thoi_gian_ket_thuc).toLocaleDateString('vi-VN')})`
-              }
-              {/* ============================= */}
-              <br />
-              <strong>Kết quả: {item.ket_qua}</strong>
-            </li>
-          ))
-        )}
-      </ul>
+      {history.length === 0 ? (
+        <p>Chưa tham gia khóa học nào.</p>
+      ) : (
+        <table className="styled-table">
+          <thead>
+            <tr>
+              <th>Tên Khóa Học</th>
+              <th>Ngày Đăng Ký</th>
+              <th>Ngày Kết Thúc</th>
+              <th>Kết Quả</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map(item => (
+              <tr key={item.ma_khoa_hoc}>
+                <td>{item.ten_khoa}</td>
+                <td>
+                  {new Date(item.ngay_dang_ky).toLocaleDateString('vi-VN', {
+                    day: '2-digit', month: '2-digit', year: 'numeric' 
+                  })}
+                </td>
+                <td>
+                  {item.thoi_gian_ket_thuc 
+                    ? new Date(item.thoi_gian_ket_thuc).toLocaleDateString('vi-VN', {
+                        day: '2-digit', month: '2-digit', year: 'numeric' 
+                      }) 
+                    : '(Đang diễn ra)'}
+                </td>
+                <td>{item.ket_qua}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {/* ------------------------------------------- */}
+
     </div>
   );
 };

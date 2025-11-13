@@ -15,15 +15,15 @@
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border-left: 5px solid #007bff; /* Màu viền trái */
+  border-left: 5px solid #007bff;
 }
 
 /* Thẻ màu khác nhau */
 .stat-card.green {
-  border-left-color: #2ecc71; /* Màu xanh lá */
+  border-left-color: #2ecc71;
 }
 .stat-card.orange {
-  border-left-color: #e67e22; /* Màu cam */
+  border-left-color: #e67e22;
 }
 
 .stat-card h4 {

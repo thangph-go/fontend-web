@@ -125,7 +125,6 @@ const ThongKePage = () => {
       {/* Bảng này CHỈ HIỂN THỊ nếu showQueQuan là true */}
       {showQueQuan && (
         <div style={{ marginTop: '10px' }}>
-          {/* (Code logic hiển thị bảng Quê quán giữ nguyên) */}
           {loadingQueQuan ? <p>Đang tải dữ liệu...</p> : (
             <table className="styled-table">
               <thead><tr><th>Tên Tỉnh</th><th>Mã Tỉnh</th><th>Số Lượng</th></tr></thead>
@@ -159,7 +158,6 @@ const ThongKePage = () => {
       {/* Bảng này CHỈ HIỂN THỊ nếu showThuongTru là true */}
       {showThuongTru && (
         <div style={{ marginTop: '10px' }}>
-          {/* (Code logic hiển thị bảng Thường trú giữ nguyên) */}
           {loadingThuongTru ? <p>Đang tải dữ liệu...</p> : (
             <table className="styled-table">
               <thead><tr><th>Tên Tỉnh</th><th>Mã Tỉnh</th><th>Số Lượng</th></tr></thead>
@@ -210,7 +208,6 @@ const ThongKePage = () => {
       {/* Bảng kết quả (CHỈ HIỂN THỊ nếu showKhoaHoc là true) */}
       {showKhoaHoc && (
         <div style={{ marginTop: '10px' }}>
-          {/* (Code logic hiển thị bảng Khóa học giữ nguyên) */}
           {loadingKhoaHoc ? <p>Đang tải dữ liệu...</p> : (
             <table className="styled-table">
               <thead><tr><th>Mã Khóa Học</th><th>Tên Khóa Học</th><th>Tổng số Học viên</th><th>Đạt</th><th>Không Đạt</th></tr></thead>

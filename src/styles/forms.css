@@ -4,13 +4,13 @@
 .form-input,
 .form-select,
 .form-textarea {
-  width: 100%; /* Chiếm toàn bộ chiều rộng của thẻ cha */
+  width: 100%;
   padding: 10px 12px;
   margin-top: 5px;
   margin-bottom: 15px;
   border: 2px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box; /* Đảm bảo padding không làm hỏng layout */
+  box-sizing: border-box;
   font-size: 1rem;
 }
 
@@ -23,7 +23,7 @@
 
 /* Định dạng cho các nút bấm (button) */
 .form-button {
-  background-color: #007bff; /* Màu xanh dương (Màu chính) */
+  background-color: #007bff;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -63,19 +63,19 @@
 
 .page-header {
   display: flex;
-  justify-content: space-between; /* Đẩy 2 item ra 2 phía */
-  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
 /* 2. Định dạng cho riêng form tìm kiếm */
 .search-form {
-  display: flex; /* Giúp ô input và nút bấm nằm ngang hàng */
+  display: flex;
 }
 
 /* Tùy chỉnh nhỏ cho ô input tìm kiếm */
 .search-input {
   width: 300px;
   margin-right: 10px;
-  margin-bottom: 0; /* Bỏ margin-bottom mặc định của .form-input */
+  margin-bottom: 0;
 }

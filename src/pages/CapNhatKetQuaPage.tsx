@@ -1,7 +1,7 @@
 // File: src/pages/CapNhatKetQuaPage.tsx
 import React, { useEffect, useState } from 'react';
 
-// 1. Import CSS
+// Import CSS
 import '../styles/forms.css';
 import '../styles/tables.css';
 
@@ -13,8 +13,14 @@ import {
   EnrollmentInfo 
 } from '../services/dangky.service';
 
-// (Import component Thông báo nếu bạn muốn)
-// import Notification from '../components/common/Notification';
+// SỬA LỖI 1: Import component Thông báo
+import Notification from '../components/common/Notification';
+
+// SỬA LỖI 2: Thêm kiểu State Thông báo
+type NotificationState = {
+  message: string;
+  type: 'success' | 'error';
+} | null;
 
 const CapNhatKetQuaPage = () => {
   // --- STATE ---
@@ -22,9 +28,9 @@ const CapNhatKetQuaPage = () => {
   const [selectedKhoaHoc, setSelectedKhoaHoc] = useState<string>('');
   const [enrollments, setEnrollments] = useState<EnrollmentInfo[]>([]);
   
-  const [error, setError] = useState<string | null>(null);
+  // SỬA LỖI 3: Thay thế 'error' state bằng 'notification' state
+  const [notification, setNotification] = useState<NotificationState>(null);
   const [loading, setLoading] = useState(false);
-  // (Bạn có thể thay thế 'error' bằng 'notification' state như các trang khác)
 
   // --- TẢI DANH SÁCH KHÓA HỌC (CHO DROPDOWN) ---
   useEffect(() => {
@@ -33,7 +39,7 @@ const CapNhatKetQuaPage = () => {
         const data = await getAllKhoaHoc();
         setKhoaHocList(data);
       } catch (err: any) {
-        setError(err.message);
+        setNotification({ message: err.message, type: 'error' });
       }
     };
     loadKhoaHoc();
@@ -42,8 +48,8 @@ const CapNhatKetQuaPage = () => {
   // --- HÀM XỬ LÝ KHI CHỌN KHÓA HỌC ---
   const handleCourseSelect = async (ma_kh: string) => {
     setSelectedKhoaHoc(ma_kh);
-    setError(null);
-    setEnrollments([]); // Reset danh sách khi chọn
+    setNotification(null);
+    setEnrollments([]); 
 
     if (!ma_kh) {
       return;
@@ -54,7 +60,7 @@ const CapNhatKetQuaPage = () => {
       const data = await getEnrollmentsByCourse(ma_kh);
       setEnrollments(data);
     } catch (err: any) {
-      setError(err.message);
+      setNotification({ message: err.message, type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -79,30 +85,39 @@ const CapNhatKetQuaPage = () => {
             : item
         )
       );
-      // (Bạn nên thêm thông báo 'success' ở đây)
+      // SỬA LỖI 4: Thêm thông báo thành công
+      setNotification({ message: 'Cập nhật kết quả thành công!', type: 'success' });
 
     } catch (err: any) {
-      alert('Lỗi khi cập nhật kết quả: ' + err.message);
-      // (Nên thay thế 'alert' bằng 'setNotification')
+      // SỬA LỖI 5: Thay thế alert()
+      setNotification({ message: err.message, type: 'error' });
     }
   };
 
   // --- GIAO DIỆN (JSX) ---
   return (
     <div>
-      {/* (Nên thêm component Notification ở đây) */}
+      {/* SỬA LỖI 6: Thêm Component Thông báo */}
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       
       <h2>Cập nhật Kết quả (Cấp chứng chỉ)</h2>
-      {error && <p style={{ color: 'red' }}>Lỗi: {error}</p>}
+      
+      {/* (Xóa dòng {error} cũ) */}
 
-      {/* 2. Áp dụng CSS cho Form/Dropdown */}
+      {/* Áp dụng CSS cho Form/Dropdown */}
       <div className="form-container" style={{padding: '15px'}}>
         <div className="form-group">
           <label className="form-label">Chọn khóa học để cập nhật:</label>
           <select 
             value={selectedKhoaHoc} 
             onChange={(e) => handleCourseSelect(e.target.value)}
-            className="form-select" // <-- ÁP DỤNG CLASS
+            className="form-select"
           >
             <option value="">-- Chọn khóa học --</option>
             {khoaHocList.map((kh) => (
@@ -114,9 +129,9 @@ const CapNhatKetQuaPage = () => {
         </div>
       </div>
 
-      <hr style={{background: "#666666", height: "2px"}} />
+      <hr style={{border: 'none', borderTop: '1px solid #eee', margin: '20px 0'}} />
       
-      {/* 3. Áp dụng CSS cho Bảng kết quả */}
+      {/* Áp dụng CSS cho Bảng kết quả */}
       {loading && <p>Đang tải danh sách học viên...</p>}
 
       {!loading && selectedKhoaHoc && (
@@ -141,11 +156,10 @@ const CapNhatKetQuaPage = () => {
                   <td>{item.ma_hoc_vien}</td>
                   <td>{item.ho_ten}</td>
                   <td>
-                    {/* 4. Áp dụng CSS cho dropdown trong bảng */}
                     <select 
                       value={item.ket_qua}
                       onChange={(e) => handleResultChange(item.ma_hoc_vien, e.target.value)}
-                      className="form-select" // <-- ÁP DỤNG CLASS
+                      className="form-select"
                     >
                       <option value="CHUA CAP NHAT">Chưa Cập Nhật</option>
                       <option value="DAT">Đạt</option>

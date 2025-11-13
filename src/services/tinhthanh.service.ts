@@ -1,5 +1,5 @@
 // File: src/services/tinhthanh.service.ts
-import apiClient from './api'; // Import apiClient đã cấu hình
+import apiClient from './api';
 
 // 1. Định nghĩa kiểu dữ liệu (Interface) cho TinhThanh
 export interface TinhThanh {

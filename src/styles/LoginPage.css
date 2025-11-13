@@ -3,10 +3,10 @@
 /* 1. Nền cho toàn bộ trang */
 .login-container {
   display: flex;
-  justify-content: center; /* Căn giữa theo chiều ngang */
-  align-items: center; /* Căn giữa theo chiều dọc */
-  min-height: 100vh; /* Cao 100% màn hình */
-  background-color: #f0f2f5; /* Một màu xám nhạt */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
 }
 
 /* 2. "Thẻ" (Card) chứa form */
@@ -28,15 +28,14 @@
   margin-bottom: 1.5rem;
 }
 
-/* 4. Nút bấm (Tái sử dụng .form-button nhưng làm nó rộng 100%) */
 .login-button {
-  width: 100%; /* Nút bấm chiếm 100% chiều rộng */
-  margin-top: 10px; /* Thêm khoảng cách phía trên nút */
+  width: 100%;
+  margin-top: 10px;
 }
 
 /* 5. Thông báo lỗi */
 .login-error {
-  color: #e74c3c; /* Màu đỏ */
+  color: #e74c3c;
   text-align: center;
   margin-top: 15px;
   font-weight: bold;
